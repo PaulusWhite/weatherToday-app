@@ -27,6 +27,7 @@ function App() {
   let [currentForecast, setCurrentForecast] = useState<DailyForecastI>(forecastNow);
 
   let code = currentForecast ? currentForecast.condition.code : 0; //weather code
+  let isForecastRightNow: boolean = (currentForecast && currentForecast.localtime) ? true : false;
 
   let dailyForecast = forecastData?.dailyForecast as DailyForecastI[];
   let suggestions = ["Washington", "Toronto", "Paris", "Berlin", "London", "Kiev", "Tokyo"];
@@ -85,7 +86,9 @@ function App() {
         {forecastData &&
           <>
             <CurrentForecast {...currentForecast}/>
-            <HourlyForecast hourlyForecastData={currentForecast.hourlyForecast}/>
+            <HourlyForecast hourlyForecastData={currentForecast.hourlyForecast}
+                            isForecastRightNow={isForecastRightNow}
+                            localtime={currentForecast.localtime}/>
           </>
         }
       </div>

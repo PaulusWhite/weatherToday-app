@@ -65,6 +65,12 @@ interface ForecastResponseI {
     data?:ForecastI,
 }
 
+interface HourlyForecastPropsI {
+    hourlyForecastData: HourlyForecastI[],
+    isForecastRightNow: boolean,
+    localtime?: string,
+}
+
 export { 
     WeatherDetailsI,
     AstroDetailsI,
@@ -73,4 +79,5 @@ export {
     ForecastI, 
     SearchI,
     ForecastResponseI,
+    HourlyForecastPropsI
  }

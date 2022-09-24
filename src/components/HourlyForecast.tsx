@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 
 //interfaces
-import { HourlyForecastI } from "../interfaces";
+import { HourlyForecastI, HourlyForecastPropsI } from "../interfaces";
 
 //Plugins
 import convertDate from "../utils/convertDate";
 
-const HourlyForecast = (props: {hourlyForecastData: HourlyForecastI[]}) => {
+const HourlyForecast = (props: HourlyForecastPropsI) => {
   let data = props.hourlyForecastData;
+  let isForecastRightNow = props.isForecastRightNow;
+  let localtime = props.localtime;
   let [hourData, setHourData] = useState<HourlyForecastI>(data[0]);
 
   let hourlyForecastArr = data.map( (hour: HourlyForecastI, index) => {
@@ -24,8 +26,23 @@ const HourlyForecast = (props: {hourlyForecastData: HourlyForecastI[]}) => {
   });
 
   useEffect( () => {
+    let hourlyForecastTable = document.querySelector(".hourlyForecast__table") as HTMLDivElement;
+    hourlyForecastTable.scrollLeft = 0;
+
+    if(isForecastRightNow){
+      let localHour = localtime?.split(" ")[3].split(":")[0] as string;
+      setHourData(data[+localHour]);
+      setTimeout( () => {
+        let activeHour = document.querySelector(".hourlyForecast__table .active") as HTMLDivElement;
+        let activeHourDistance: number = activeHour.getBoundingClientRect().left;
+        let hourlyForecastTableDistance: number = hourlyForecastTable.getBoundingClientRect().left;
+        hourlyForecastTable.scrollLeft = activeHourDistance - hourlyForecastTableDistance;
+      }, 100);
+      return;
+    }
+
     setHourData(data[0]);
-  }, [data]);
+  }, [data, isForecastRightNow]);
     
   return (
     <div className="hourlyForecast">
